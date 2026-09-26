@@ -1,0 +1,7 @@
+cd	tg	bg	img	cm	att	ln
+code1	web	/bg	/img	com1	att1	ln1
+code2	web	/bg	/img	com2	att2	ln2
+code3	web	/bg	/img	com3	att3	ln3
+code4	web	/bg	/img	com4	att4	ln4
+code5	web	/bg	/img	com5	att5	ln5
+code6	app	/bg/ad	/img/ad	add comment	ATT	https://xxxxx.xxxxx/xxxxxx/

@@ -1,0 +1,5 @@
+code	name	path	explanation
+aaa	名前1	/test/test2	説明はこんな感じ
+aab	名前2	/test/test4	説明はそんな感じ
+aac	名前3	/test/test6	説明はあんな感じ
+aad	名前4	/test/test7	説明はどんな感じ

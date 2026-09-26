@@ -1,0 +1,2 @@
+wk	cds
+wk002	cd002,cd003

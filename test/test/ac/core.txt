@@ -1,0 +1,2 @@
+path.data=data/data.txt
+path.target=data/target.txt

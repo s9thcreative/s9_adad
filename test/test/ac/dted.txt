@@ -1,0 +1,6 @@
+cd	tg	bg	img	cm	att	ln
+code1	web	/bg	/img	com1	att1	ln1
+code2	app	/bg/ed	/img/ed	edit comment	ATT-ed	https://yyyyy.yyyyy/yyyyy/
+code3	web	/bg	/img	com3	att3	ln3
+code4	web	/bg	/img	com4	att4	ln4
+code5	web	/bg	/img	com5	att5	ln5

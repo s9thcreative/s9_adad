@@ -1,0 +1,2 @@
+cd	tg	bg	img	cm	att	ln
+code6	app					

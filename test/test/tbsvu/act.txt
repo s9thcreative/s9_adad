@@ -1,0 +1,5 @@
+code	name	path	explanation
+code-0	名前0	/path/path2/path-0	説明文その0
+code-1	名前1	/path/path2/path-1	説明文その1
+code-2	名前2	/path/path2/path-2	説明文その2
+code-3	名前3	/path/path2/path-3	説明文その3
