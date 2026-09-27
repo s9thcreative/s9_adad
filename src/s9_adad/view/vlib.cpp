@@ -6,6 +6,7 @@
 #include <QSize>
 #include <QFont>
 #include <QObject>
+#include <QTimer>
 #include <iostream>
 
 namespace s9_adad::view{
@@ -107,5 +108,9 @@ void t__V::vtest_a(){
 	int argc = 0;
 	char* argv = nullptr;
 	vtest_app = new QApplication(argc, &argv);
+}
+
+void t__V::vtest_wt(int ms, std::function<void()> f){
+	QTimer::singleShot(ms, f);
 }
 }

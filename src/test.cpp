@@ -5,6 +5,7 @@
 #include "s9_adad/view/vdt.hpp"
 #include "s9_adad/view/vtg.hpp"
 #include "s9_adad/view/vlib.hpp"
+#include "s9_adad/view/vc.hpp"
 #include "iostream"
 
 string calltest(string cls, string mth);
@@ -131,6 +132,16 @@ string calltest(string cls, string mth){
 	if (cls == "VImLd"){
 		if (mth == "ld") return s9_adad::view::VImLd::t_ld();
 		if (mth == "ld_x") return s9_adad::view::VImLd::t_ld_x();
+	}
+	if (cls == "VM"){
+		if (mth == "m") return s9_adad::view::VM::t_m();
+		if (mth == "att") return s9_adad::view::VM::t_att();
+		if (mth == "att_tg") return s9_adad::view::VM::t_att_tg();
+	}
+	if (cls == "VC"){
+		if (mth == "v") return s9_adad::view::VC::t_v();
+		if (mth == "v_tg") return s9_adad::view::VC::t_v_tg();
+		if (mth == "v_tgs") return s9_adad::view::VC::t_v_tgs();
 	}
 	return "\033[31m[ERROR] not call\033[0m";
 }

@@ -198,6 +198,7 @@ QSize VTg::ly(QSize sz){
 		y += isz.height()+50;
 	}
 	vin->setMinimumSize(QSize(ww, y));
+	vin->updateGeometry();
 	return sz;
 }
 void VTg::u(){
@@ -210,6 +211,7 @@ void VTg::u(){
 		vtg->dtitf = dtitf;
 		vtg->i_tg(&tgi);
 		vtg->u();
+		vtg->show();
 		vl.push_back(vtg);
 	}
 }

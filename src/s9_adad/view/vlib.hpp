@@ -58,5 +58,6 @@ class t__V{
 		static QWidget* vtest_p(QString ttl="");
 		static void vtest();
 		static void vtest_a();
+		static void vtest_wt(int ms, std::function<void()> f);
 };
 }

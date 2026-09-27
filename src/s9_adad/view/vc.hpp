@@ -1,5 +1,15 @@
 #pragma once
 
+#include <QMenuBar>
+#include <vector>
+#include <QMainWindow>
+#include "vlib.hpp"
+#include "vtg.hpp"
+#include "vdt.hpp"
+#include "../core/tb.cpp"
+#include "../core/acd.cpp"
+#include <string>
+
 using namespace std;
 
 namespace s9_adad::view{
@@ -18,5 +28,47 @@ namespace s9_adad::view{
 				MnTgAdd,
 				MnPhp
 			};
+	};
+	class VM{
+		public:
+			enum class Cnd{
+				Dt,
+				Tg
+			};
+			vector<QAction*> ms;
+			~VM() = default;
+			void m(QMenuBar* b);
+			static string t_m();
+			void om(int i);
+			void att(Cnd cnd);
+			static string t_att();
+			static string t_att_tg();
+	};
+	class VSp{
+		public:
+			enum{
+				Pg_Dt,
+				Pg_Tg
+			};
+			virtual ~VSp() = default;
+			virtual int cr() = 0;
+			virtual vector<s9_adad::core::TDtI>* dtl() = 0;
+			virtual vector<s9_adad::core::TgI>* tgl() = 0;
+			virtual DtItf* dtitf() = 0;
+	};
+	class VC{
+		public:
+			VSp* sp = nullptr;
+			VM* m = nullptr;
+			VDt* vdt = nullptr;
+			VTg* vtg = nullptr;
+			QMainWindow* w;
+			void ini(string ttl);
+			void st();
+			void dTgSel(s9_adad::core::TgI* tg);
+			void u();
+			static string t_v();
+			static string t_v_tg();
+			static string t_v_tgs();
 	};
 }

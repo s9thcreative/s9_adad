@@ -23,6 +23,8 @@ add_executable(t
 	../src/s9_adad/view/vtg.hpp
 	../src/s9_adad/view/vlib.cpp
 	../src/s9_adad/view/vlib.hpp
+	../src/s9_adad/view/vc.cpp
+	../src/s9_adad/view/vc.hpp
 	../src/test.cpp
 )
 
