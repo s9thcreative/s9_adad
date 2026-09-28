@@ -14,7 +14,25 @@ namespace fs = std::filesystem;
 
 namespace s9_adad::core{
 
-class AC{
+class ACA{
+	public:
+		virtual ~ACA() = default;
+		virtual vector<TDtI>* dtL() = 0;
+		virtual TDtI* dt(const string& k) = 0;
+		virtual bool dtIi(const string& k) = 0;
+		virtual bool dtAd(TDtI& d) = 0;
+		virtual bool dtEd(TDtI& d) = 0;
+		virtual bool dtDe(const string& k) = 0;
+		virtual vector<TgI>* tgL() = 0;
+		virtual TgI* tg(const string& k) = 0;
+		virtual bool tgIi(const string& k) = 0;
+		virtual bool tgAd(const string& k) = 0;
+		virtual bool tgAss(const string& k, const vector<string>& cds) = 0;
+		virtual bool tgDe(const string& k) = 0;
+		virtual bool pOu() = 0;
+};
+
+class AC : public ACA{
 	public:
 		inline static AC* _inst = nullptr;
 		static AC* inst(){
@@ -135,7 +153,7 @@ class AC{
 			}
 			return ss.str();
 		}
-		vector<TDtI>* dtL(){
+		vector<TDtI>* dtL() override{
 			return &tdt.dt;
 		}
 		static string t_dtL(){
@@ -155,7 +173,7 @@ class AC{
 			}
 			return ss.str();
 		}
-		TDtI* dt(const string& k){
+		TDtI* dt(const string& k) override{
 			return tdt.g(k);
 		}
 		static string t_dt(){
@@ -174,7 +192,7 @@ class AC{
 			ss << (*r) << endl;
 			return ss.str();
 		}
-		bool dtIi(const string& k){
+		bool dtIi(const string& k) override{
 			if (tdt.idx != nullopt){
 				return tdt.idx->ii(k);
 			}
@@ -190,7 +208,7 @@ class AC{
 			return to_string(r1) + "/"+ to_string(r2);
 		}
 		
-		bool dtAd(TDtI& d){
+		bool dtAd(TDtI& d) override{
 			bool r = tdt.ad(d);
 			if (!r) return false;
 			tdt.sv();
@@ -234,7 +252,7 @@ class AC{
 			bool r = ac.dtAd(dti);
 			return to_string(r);
 		}
-		bool dtEd(TDtI& d){
+		bool dtEd(TDtI& d) override{
 			TDtI* vd = tdt.g(d.g(tdt.ik));
 			if (vd == nullptr) return false;
 			for(auto p : d.dt){
@@ -281,7 +299,7 @@ class AC{
 			bool r = ac.dtEd(dti);
 			return to_string(r);
 		}
-		bool dtDe(const string& k){
+		bool dtDe(const string& k) override{
 			bool r = tdt.de(k);
 			if (!r) return false;
 			tdt.sv();
@@ -298,7 +316,7 @@ class AC{
 			bool r = ac.dtDe("code3");
 			return to_string(r);
 		}
-		vector<TgI>* tgL(){
+		vector<TgI>* tgL() override{
 			return &tgl;
 		}
 		static string t_tgL(){
@@ -321,7 +339,7 @@ class AC{
 			}
 			return ss.str();
 		}
-		TgI* tg(const string& k){
+		TgI* tg(const string& k) override{
 			uint i = ttg.idx->si(k);
 			if (i == -1) return nullptr;
 			return &tgl[i];
@@ -348,7 +366,7 @@ class AC{
 			ss << *r;
 			return ss.str();
 		}
-		bool tgIi(const string& k){
+		bool tgIi(const string& k) override{
 			if (ttg.idx == nullopt){
 				return false;
 			}
@@ -394,7 +412,7 @@ class AC{
 			bool r = ac.tgIi("wk003");
 			return to_string(r);
 		}
-		bool tgAd(const string& k){
+		bool tgAd(const string& k) override{
 			TDtI dti;
 			dti.s("wk", k);
 			dti.s("cds", "");
@@ -426,7 +444,7 @@ class AC{
 			bool r = ac.tgAd("wk002");
 			return to_string(r);
 		}
-		bool tgAss(const string& k, const vector<string>& cds){
+		bool tgAss(const string& k, const vector<string>& cds) override{
 			TDtI* d = ttg.g(k);
 			if (d == nullptr) return false;
 			uint l = 0;
@@ -475,7 +493,7 @@ class AC{
 			bool r = ac.tgAss("wk003", v);
 			return to_string(r);
 		}
-		bool tgDe(const string& k){
+		bool tgDe(const string& k) override{
 			ttg.de(k);
 			ttg.sv();
 			btg(ttg.dt, tgl);
@@ -492,7 +510,7 @@ class AC{
 			bool r = ac.tgDe("wk001");
 			return to_string(r);
 		}
-		bool pOu(){
+		bool pOu() override{
 			string p = ev.pth("path.out.ad_config");
 			s9_cflow::CFObs obs;
 			obs.data["pth"] = fs::path(p);
