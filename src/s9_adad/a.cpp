@@ -23,13 +23,18 @@ class VCDmy : public VCI{
 		void u() override{
 			std::cout << "call u" << std::endl;
 		}
+		void dEr(string msg) override{
+			std::cout << "call dEr:" << msg << std::endl;
+		}
 };
 
 class ACDmy : public ACA{
 	public:
 		vector<TDtI> dtlo;
 		vector<TgI> tglo;
-		ACDmy(){
+		string md;
+		ACDmy(string md_=""){
+			md = md_;
 			for(int j = 0; j < 4; ++j){
 				TgI tg;
 				tg.wk = "waku"+to_string(j);
@@ -67,6 +72,13 @@ class ACDmy : public ACA{
 			}
 			return false;
 		}
+		string ckDt(TDtI& d, bool aa) override{
+			std::cout << "ck dt " << d << aa << endl;
+			if (md == "er"){
+				return "param check error\n";
+			}
+			return "";
+		}
 		bool dtAd(TDtI& d) override{
 			std::cout << "dt add do" << d<< endl;
 			return true;
@@ -93,6 +105,13 @@ class ACDmy : public ACA{
 				if (tg.wk == k) return true;
 			}
 			return false;
+		}
+		string ckTg(const string& k) override{
+			std::cout << "ck tg " << k<< endl;
+			if (md == "er"){
+				return "param check error\n";
+			}
+			return "";
 		}
 		bool tgAd(const string& k) override{
 			std::cout << "tg add do" << k<< endl;
@@ -130,7 +149,66 @@ class EvM : public VEv{
 		void doEv(VEvO* ev){
 			if (ev->ev == EvTp::DtAdd){
 				TDtI* dt = (TDtI*)(ev->o);
+				string m = G::inst()->ac->ckDt(*dt, true);
+				if (!m.empty()){
+					G::inst()->vc->dEr(m);
+					return;
+				}
 				G::inst()->ac->dtAd(*dt);
+				G::inst()->vc->u();
+			}
+			else if (ev->ev == EvTp::DtEdit){
+				TDtI* dt = (TDtI*)(ev->o);
+				string m = G::inst()->ac->ckDt(*dt, false);
+				if (!m.empty()){
+					G::inst()->vc->dEr(m);
+					return;
+				}
+				G::inst()->ac->dtEd(*dt);
+				G::inst()->vc->u();
+			}
+			else if (ev->ev == EvTp::DtDel){
+				string* cd = (string*)(ev->o);
+				bool ii = G::inst()->ac->dtIi(*cd);
+				if (!ii){
+					G::inst()->vc->dEr("データがみつかりません");
+					return;
+				}
+				G::inst()->ac->dtDe(*cd);
+				G::inst()->vc->u();
+			}
+			else if (ev->ev == EvTp::TgAdd){
+				string* wk = (string*)(ev->o);
+				string m = G::inst()->ac->ckTg(*wk);
+				if (!m.empty()){
+					G::inst()->vc->dEr(m);
+					return;
+				}
+				G::inst()->ac->tgAd(*wk);
+				G::inst()->vc->u();
+			}
+			else if (ev->ev == EvTp::TgToEdit){
+				TgI* tg = (TgI*)(ev->o);
+				G::inst()->vc->dTgSel(tg);
+			}
+			else if (ev->ev == EvTp::TgEdit){
+				TgI* tg = (TgI*)(ev->o);
+				bool ii = G::inst()->ac->tgIi(tg->wk);
+				if (!ii){
+					G::inst()->vc->dEr("データがみつかりません");
+					return;
+				}
+				G::inst()->ac->tgAss(tg->wk, tg->cds);
+				G::inst()->vc->u();
+			}
+			else if (ev->ev == EvTp::TgDel){
+				string* wk = (string*)(ev->o);
+				bool ii = G::inst()->ac->tgIi(*wk);
+				if (!ii){
+					G::inst()->vc->dEr("データがみつかりません");
+					return;
+				}
+				G::inst()->ac->tgDe(*wk);
 				G::inst()->vc->u();
 			}
 		}
@@ -148,6 +226,153 @@ class EvM : public VEv{
 			dti.s("att", "att1");
 			dti.s("ln", "https://ggmoyou.com/ln1");
 			VEvO evo(EvTp::DtAdd, &dti);
+			ev.doEv(&evo);
+			return "do";
+		}
+		static string t_doEv_dta_er(){
+			EvM ev;
+			G::inst()->ac = new ACDmy("er");
+			G::inst()->vc = new VCDmy();
+			VG::inst()->ev = new VEvDmy();
+			TDtI dti;
+			dti.s("cd", "code1");
+			dti.s("tg", "tg");
+			dti.s("bg", "/bg/test.png");
+			dti.s("img", "/img/test.png");
+			dti.s("cm", "cm1");
+			dti.s("att", "att1");
+			dti.s("ln", "https://ggmoyou.com/ln1");
+			VEvO evo(EvTp::DtAdd, &dti);
+			ev.doEv(&evo);
+			return "do";
+		}
+		static string t_doEv_dte(){
+			EvM ev;
+			G::inst()->ac = new ACDmy();
+			G::inst()->vc = new VCDmy();
+			VG::inst()->ev = new VEvDmy();
+			TDtI dti;
+			dti.s("cd", "code1");
+			dti.s("tg", "tg");
+			dti.s("bg", "/bg/test.png");
+			dti.s("img", "/img/test.png");
+			dti.s("cm", "cm1");
+			dti.s("att", "att1");
+			dti.s("ln", "https://ggmoyou.com/ln1");
+			VEvO evo(EvTp::DtEdit, &dti);
+			ev.doEv(&evo);
+			return "do";
+		}
+		static string t_doEv_dte_er(){
+			EvM ev;
+			G::inst()->ac = new ACDmy("er");
+			G::inst()->vc = new VCDmy();
+			VG::inst()->ev = new VEvDmy();
+			TDtI dti;
+			dti.s("cd", "code1");
+			dti.s("tg", "tg");
+			dti.s("bg", "/bg/test.png");
+			dti.s("img", "/img/test.png");
+			dti.s("cm", "cm1");
+			dti.s("att", "att1");
+			dti.s("ln", "https://ggmoyou.com/ln1");
+			VEvO evo(EvTp::DtEdit, &dti);
+			ev.doEv(&evo);
+			return "do";
+		}
+		static string t_doEv_dtd(){
+			EvM ev;
+			G::inst()->ac = new ACDmy();
+			G::inst()->vc = new VCDmy();
+			VG::inst()->ev = new VEvDmy();
+			string cd = "code2";
+			VEvO evo(EvTp::DtDel, &cd);
+			ev.doEv(&evo);
+			return "do";
+		}
+		static string t_doEv_dtd_er(){
+			EvM ev;
+			G::inst()->ac = new ACDmy();
+			G::inst()->vc = new VCDmy();
+			VG::inst()->ev = new VEvDmy();
+			string cd = "code_notfound";
+			VEvO evo(EvTp::DtDel, &cd);
+			ev.doEv(&evo);
+			return "do";
+		}
+		static string t_doEv_tga(){
+			EvM ev;
+			G::inst()->ac = new ACDmy();
+			G::inst()->vc = new VCDmy();
+			VG::inst()->ev = new VEvDmy();
+			string wk = "waku_new";
+			VEvO evo(EvTp::TgAdd, &wk);
+			ev.doEv(&evo);
+			return "do";
+		}
+		static string t_doEv_tga_er(){
+			EvM ev;
+			G::inst()->ac = new ACDmy("er");
+			G::inst()->vc = new VCDmy();
+			VG::inst()->ev = new VEvDmy();
+			string wk = "waku_new";
+			VEvO evo(EvTp::TgAdd, &wk);
+			ev.doEv(&evo);
+			return "do";
+		}
+		static string t_doEv_tgte(){
+			EvM ev;
+			G::inst()->ac = new ACDmy();
+			G::inst()->vc = new VCDmy();
+			VG::inst()->ev = new VEvDmy();
+			TgI tgi;
+			tgi.wk = "waku";
+			tgi.cds.push_back("code1");
+			VEvO evo(EvTp::TgToEdit, &tgi);
+			ev.doEv(&evo);
+			return "do";
+		}
+		static string t_doEv_tge(){
+			EvM ev;
+			G::inst()->ac = new ACDmy();
+			G::inst()->vc = new VCDmy();
+			VG::inst()->ev = new VEvDmy();
+			TgI tgi;
+			tgi.wk = "waku1";
+			tgi.cds.push_back("code1");
+			VEvO evo(EvTp::TgEdit, &tgi);
+			ev.doEv(&evo);
+			return "do";
+		}
+		static string t_doEv_tge_er(){
+			EvM ev;
+			G::inst()->ac = new ACDmy();
+			G::inst()->vc = new VCDmy();
+			VG::inst()->ev = new VEvDmy();
+			TgI tgi;
+			tgi.wk = "waku_no";
+			tgi.cds.push_back("code1");
+			VEvO evo(EvTp::TgEdit, &tgi);
+			ev.doEv(&evo);
+			return "do";
+		}
+		static string t_doEv_tgd(){
+			EvM ev;
+			G::inst()->ac = new ACDmy();
+			G::inst()->vc = new VCDmy();
+			VG::inst()->ev = new VEvDmy();
+			string wk = "waku1";
+			VEvO evo(EvTp::TgDel, &wk);
+			ev.doEv(&evo);
+			return "do";
+		}
+		static string t_doEv_tgd_er(){
+			EvM ev;
+			G::inst()->ac = new ACDmy();
+			G::inst()->vc = new VCDmy();
+			VG::inst()->ev = new VEvDmy();
+			string wk = "waku_no";
+			VEvO evo(EvTp::TgDel, &wk);
 			ev.doEv(&evo);
 			return "do";
 		}

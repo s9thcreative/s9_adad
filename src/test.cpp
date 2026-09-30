@@ -82,6 +82,11 @@ string calltest(string cls, string mth){
 	if (cls == "PSvU"){
 		if (mth == "act") return s9_adad::core::PSvU::t_act();
 	}
+	if (cls == "Ck"){
+		if (mth == "wd") return s9_adad::core::Ck::t_wd();
+		if (mth == "ina") return s9_adad::core::Ck::t_ina();
+		if (mth == "urla") return s9_adad::core::Ck::t_urla();
+	}
 	if (cls == "AC"){
 		if (mth == "ldev") return s9_adad::core::AC::t_ldev();
 		if (mth == "btg") return s9_adad::core::AC::t_btg();
@@ -89,6 +94,10 @@ string calltest(string cls, string mth){
 		if (mth == "dtL") return s9_adad::core::AC::t_dtL();
 		if (mth == "dt") return s9_adad::core::AC::t_dt();
 		if (mth == "dtIi") return s9_adad::core::AC::t_dtIi();
+		if (mth == "ckDt") return s9_adad::core::AC::t_ckDt();
+		if (mth == "ckDt_d") return s9_adad::core::AC::t_ckDt_d();
+		if (mth == "ckDt_e") return s9_adad::core::AC::t_ckDt_e();
+		if (mth == "ckDt_x") return s9_adad::core::AC::t_ckDt_x();
 		if (mth == "dtAd") return s9_adad::core::AC::t_dtAd();
 		if (mth == "dtAd_n") return s9_adad::core::AC::t_dtAd_n();
 		if (mth == "dtEd") return s9_adad::core::AC::t_dtEd();
@@ -98,6 +107,9 @@ string calltest(string cls, string mth){
 		if (mth == "tg") return s9_adad::core::AC::t_tg();
 		if (mth == "tgIi") return s9_adad::core::AC::t_tgIi();
 		if (mth == "tgIi_x") return s9_adad::core::AC::t_tgIi_x();
+		if (mth == "ckTg") return s9_adad::core::AC::t_ckTg();
+		if (mth == "ckTg_x") return s9_adad::core::AC::t_ckTg_x();
+		if (mth == "ckTg_d") return s9_adad::core::AC::t_ckTg_d();
 		if (mth == "tgAd") return s9_adad::core::AC::t_tgAd();
 		if (mth == "tgAd_x") return s9_adad::core::AC::t_tgAd_x();
 		if (mth == "tgAss") return s9_adad::core::AC::t_tgAss();
@@ -143,9 +155,22 @@ string calltest(string cls, string mth){
 		if (mth == "v") return s9_adad::view::VC::t_v();
 		if (mth == "v_tg") return s9_adad::view::VC::t_v_tg();
 		if (mth == "v_tgs") return s9_adad::view::VC::t_v_tgs();
+		if (mth == "v_er") return s9_adad::view::VC::t_v_er();
 	}
 	if (cls == "EvM"){
 		if (mth == "doEv_dta") return s9_adad::EvM::t_doEv_dta();
+		if (mth == "doEv_dta_er") return s9_adad::EvM::t_doEv_dta_er();
+		if (mth == "doEv_dte") return s9_adad::EvM::t_doEv_dte();
+		if (mth == "doEv_dte_er") return s9_adad::EvM::t_doEv_dte_er();
+		if (mth == "doEv_dtd") return s9_adad::EvM::t_doEv_dtd();
+		if (mth == "doEv_dtd_er") return s9_adad::EvM::t_doEv_dtd_er();
+		if (mth == "doEv_tga") return s9_adad::EvM::t_doEv_tga();
+		if (mth == "doEv_tga_er") return s9_adad::EvM::t_doEv_tga_er();
+		if (mth == "doEv_tge") return s9_adad::EvM::t_doEv_tge();
+		if (mth == "doEv_tge_er") return s9_adad::EvM::t_doEv_tge_er();
+		if (mth == "doEv_tgte") return s9_adad::EvM::t_doEv_tgte();
+		if (mth == "doEv_tgd") return s9_adad::EvM::t_doEv_tgd();
+		if (mth == "doEv_tgd_er") return s9_adad::EvM::t_doEv_tgd_er();
 	}
 	return "\033[31m[ERROR] not call\033[0m";
 }

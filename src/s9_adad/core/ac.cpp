@@ -14,18 +14,74 @@ namespace fs = std::filesystem;
 
 namespace s9_adad::core{
 
+class Ck{
+	public:
+		static int wd(const string& v){
+			for(unsigned char c:v){
+				if ((c >= '0')&&(c <= '9')) continue;
+				if ((c >= 'a')&&(c <= 'z')) continue;
+				if ((c >= 'A')&&(c <= 'Z')) continue;
+				if (c == '_') continue;
+				return 1;
+			}
+			return 0;
+		}
+		static string t_wd(){
+			string chk[3] = {"09azAZ_", "test-abc", "abcあああああ"};
+			stringstream ss;
+			for(string v:chk){
+				ss << wd(v);
+			}
+			return ss.str();
+		}
+		static int ina(const string& v, vector<string>& a){
+			for(string& s: a){
+				if (s == v) return 0;
+			}
+			return 1;
+		}
+		static string t_ina(){
+			string chk[3] = {"test1", "test2", "test3"};
+			vector<string> a = {"test1", "test2"};
+			stringstream ss;
+			for(string v:chk){
+				ss << ina(v, a);
+			}
+			return ss.str();
+		}
+		static int urla(const string& v){
+			size_t p = v.find(':');
+			if (p == string::npos) return 1;
+			string sc = v.substr(0, p);
+			if (sc != "http" && sc != "https" && sc != "itms-apps") return 1;
+			if (v.size() < p+2) return 1;
+			if ((v[p+1] != '/') || (v[p+2] != '/')) return 1;
+			return 0;
+		}
+		static string t_urla(){
+			string chk[5] = {"https://ggmoyou.com/test", "itms-apps://itunes.apple.com/jp/app/id868770763", "http://ggmoyou.com/nosecure", "https:test", "data:test"};
+			stringstream ss;
+			for(string v:chk){
+				ss << urla(v);
+			}
+			return ss.str();
+		}
+};
+
 class ACA{
 	public:
 		virtual ~ACA() = default;
 		virtual vector<TDtI>* dtL() = 0;
 		virtual TDtI* dt(const string& k) = 0;
 		virtual bool dtIi(const string& k) = 0;
+		virtual string ckDt(TDtI& d, bool aa) = 0;
 		virtual bool dtAd(TDtI& d) = 0;
 		virtual bool dtEd(TDtI& d) = 0;
 		virtual bool dtDe(const string& k) = 0;
 		virtual vector<TgI>* tgL() = 0;
 		virtual TgI* tg(const string& k) = 0;
 		virtual bool tgIi(const string& k) = 0;
+		virtual string ckTg(const string& k) = 0;
 		virtual bool tgAd(const string& k) = 0;
 		virtual bool tgAss(const string& k, const vector<string>& cds) = 0;
 		virtual bool tgDe(const string& k) = 0;
@@ -207,7 +263,152 @@ class AC : public ACA{
 			bool r2 = ac.dtIi("aa"s);
 			return to_string(r1) + "/"+ to_string(r2);
 		}
-		
+		string ckDt(TDtI& d, bool aa) override{
+			string er = "";
+			string v = d.g("cd");
+			if (v.empty()){
+				er += "cd error\n";
+			}
+			else if (Ck::wd(v) != 0){
+				er += "cd wd error\n";
+			}
+			else if (v.size() >= 20){
+				er += "cd len error\n";
+			}
+			else{
+				bool ii = dtIi(v);
+				if (aa){
+					if (ii){
+						er += "cd already exists";
+					}
+				}
+				else{
+					if (!ii){
+						er += "cd not found";
+					}
+				}
+			}
+			v = d.g("tg");
+			static vector<string> tga = {"web", "app"};
+			if (v.empty()){
+				er += "tg error\n";
+			}
+			else if (Ck::ina(v, tga) != 0){
+				er += "tg ina error\n";
+			}
+			v = d.g("bg");
+			if (v.empty()){
+				er += "bg error\n";
+			}
+			else if (v.size() >= 100){
+				er += "bg len error\n";
+			}
+			v = d.g("img");
+			if (v.empty()){
+				er += "img error\n";
+			}
+			else if (v.size() >= 100){
+				er += "img len error\n";
+			}
+			v = d.g("cm");
+			if (v.empty()){
+				er += "cm error\n";
+			}
+			else if (v.size() >= 300){
+				er += "cm len error\n";
+			}
+			v = d.g("att");
+			if (v.empty()){
+				er += "att error\n";
+			}
+			else if (v.size() >= 60){
+				er += "att len error\n";
+			}
+			v = d.g("ln");
+			if (v.empty()){
+				er += "ln error\n";
+			}
+			else if (Ck::urla(v)){
+				er += "ln urla error\n";
+			}
+			else if (v.size() >= 100){
+				er += "ln len error\n";
+			}
+			return er;
+		}
+		static string t_ckDt(){
+			AC ac;
+			string bp = "../test/ac/dtad-b.txt";
+			ac.tdt.pth = bp;
+			ac.tdt.ld();
+			ac.tdt.bi();
+			TDtI dti;
+			dti.s("cd", "code_new");
+			dti.s("tg", "app");
+			dti.s("bg", "/bg/ad");
+			dti.s("img", "/img/ad");
+			dti.s("cm", "日本語コメント");
+			dti.s("att", "ATT");
+			dti.s("ln", "https://ggomoyou.com/test/");
+			return ac.ckDt(dti, true);
+		}
+		static string t_ckDt_d(){
+			AC ac;
+			string bp = "../test/ac/dtad-b.txt";
+			ac.tdt.pth = bp;
+			ac.tdt.ld();
+			ac.tdt.bi();
+			TDtI dti;
+			dti.s("cd", "code1");
+			dti.s("tg", "app");
+			dti.s("bg", "/bg/ad");
+			dti.s("img", "/img/ad");
+			dti.s("cm", "日本語コメント");
+			dti.s("att", "ATT");
+			dti.s("ln", "https://ggomoyou.com/test/");
+			return ac.ckDt(dti, true);
+		}
+		static string t_ckDt_e(){
+			AC ac;
+			string bp = "../test/ac/dtad-b.txt";
+			ac.tdt.pth = bp;
+			ac.tdt.ld();
+			ac.tdt.bi();
+			TDtI dti;
+			dti.s("cd", "code2");
+			dti.s("tg", "app");
+			dti.s("bg", "/bg/ad");
+			dti.s("img", "/img/ad");
+			dti.s("cm", "日本語コメント");
+			dti.s("att", "ATT");
+			dti.s("ln", "https://ggomoyou.com/test/");
+			return ac.ckDt(dti, false);
+		}
+		static string t_ckDt_x(){
+			AC ac;
+			string bp = "../test/ac/dtad-b.txt";
+			ac.tdt.pth = bp;
+			ac.tdt.ld();
+			ac.tdt.bi();
+			TDtI dti;
+			dti.s("cd", "co-de");
+			dti.s("tg", "app2");
+			string v = "/bg/";
+			for(; v.size() < 101; v+="1234567890");
+			dti.s("bg", v);
+			v = "/img/";
+			for(; v.size() < 101; v+="1234567890");
+			dti.s("img", v);
+			v = "";
+			for(; v.size() < 301; v+="日本語コメントあああ");
+			dti.s("cm", v);
+			v = "";
+			for(; v.size() < 61; v+="1234567890");
+			dti.s("att", v);
+			dti.s("ln", "ggomoyou.com/test/");
+			return ac.ckDt(dti, true);
+		}
+
 		bool dtAd(TDtI& d) override{
 			bool r = tdt.ad(d);
 			if (!r) return false;
@@ -412,6 +613,46 @@ class AC : public ACA{
 			bool r = ac.tgIi("wk003");
 			return to_string(r);
 		}
+		string ckTg(const string& k) override{
+			if (k.empty()){
+				return "wk error";
+			}
+			else if (Ck::wd(k) != 0){
+				return "wk wd error";
+			}
+			else if (tgIi(k)){
+				return "wk already exists";
+			}
+			return "";
+		}
+		static string t_ckTg(){
+			string bp = "../test/ac/tgad-b.txt";
+			AC ac;
+			ac.ttg.pth = bp;
+			ac.ttg.ld();
+			ac.ttg.bi();
+			string v = "waku_new";
+			return ac.ckTg(v);
+		}
+		static string t_ckTg_x(){
+			string bp = "../test/ac/tgad-b.txt";
+			AC ac;
+			ac.ttg.pth = bp;
+			ac.ttg.ld();
+			ac.ttg.bi();
+			string v = "waku-new";
+			return ac.ckTg(v);
+		}
+		static string t_ckTg_d(){
+			string bp = "../test/ac/tgad-b.txt";
+			AC ac;
+			ac.ttg.pth = bp;
+			ac.ttg.ld();
+			ac.ttg.bi();
+			string v = "wk001";
+			return ac.ckTg(v);
+		}
+		
 		bool tgAd(const string& k) override{
 			TDtI dti;
 			dti.s("wk", k);

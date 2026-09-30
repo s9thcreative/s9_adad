@@ -61,6 +61,7 @@ namespace s9_adad::view{
 			virtual ~VCI() = default;
 			virtual void dTgSel(s9_adad::core::TgI* tg) = 0;
 			virtual void u() = 0;
+			virtual void dEr(string) = 0;
 	};
 	class VC : public VCI{
 		public:
@@ -73,8 +74,10 @@ namespace s9_adad::view{
 			void st();
 			void dTgSel(s9_adad::core::TgI* tg) override;
 			void u() override;
+			void dEr(string) override;
 			static string t_v();
 			static string t_v_tg();
 			static string t_v_tgs();
+			static string t_v_er();
 	};
 }

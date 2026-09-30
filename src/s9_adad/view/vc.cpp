@@ -2,6 +2,7 @@
 #include <QMenu>
 #include <QAction>
 #include <iostream>
+#include <QMessageBox>
 #include "vlib.hpp"
 
 using namespace s9_adad::core;
@@ -204,6 +205,15 @@ string VC::t_v_tgs(){
 		vcp->dTgSel(tg);
 	});
 	vc.st();
+	return "view";
+}
+void VC::dEr(string msg){
+	QMessageBox::critical(w, "ERROR", QString::fromStdString(msg));
+}
+string VC::t_v_er(){
+	VC vc;
+	vc.ini("dEr");
+	vc.dEr("エラーメッセージ\nエラーメッセージ\nエラーメッセージ\nエラーメッセージ\nエラーメッセージ\n");
 	return "view";
 }
 }
