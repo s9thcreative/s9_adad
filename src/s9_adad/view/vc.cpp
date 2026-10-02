@@ -3,6 +3,7 @@
 #include <QAction>
 #include <iostream>
 #include <QMessageBox>
+#include <QInputDialog>
 #include "vlib.hpp"
 
 using namespace s9_adad::core;
@@ -99,6 +100,9 @@ class VSpDmy:public VSp, public DtItf{
 		int cr() override{
 			return pg;
 		}
+		void i_cr(int pg_) override{
+			pg = pg_;
+		}
 		vector<TDtI>* dtl() override{
 			return &dtlo;
 		}
@@ -135,6 +139,9 @@ void VC::ini(string ttl){
 void VC::st(){
 	u();
 	VG::inst()->app->exec();
+}
+VSp* VC::o_sp(){
+	return sp;
 }
 void VC::dTgSel(TgI* tg){
 	VTgSel v(w);
@@ -215,5 +222,17 @@ string VC::t_v_er(){
 	vc.ini("dEr");
 	vc.dEr("エラーメッセージ\nエラーメッセージ\nエラーメッセージ\nエラーメッセージ\nエラーメッセージ\n");
 	return "view";
+}
+string VC::dITx(string msg){
+	bool ok;
+	QString r = QInputDialog::getText(w, "INPUT", QString::fromStdString(msg), QLineEdit::Normal, "", &ok);
+	if (!ok) return "";
+	return r.toStdString();
+}
+string VC::t_v_itx(){
+	VC vc;
+	vc.ini("VC.dITx");
+	string r = vc.dITx("入力してください");
+	return r;
 }
 }

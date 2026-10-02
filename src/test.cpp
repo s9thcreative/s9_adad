@@ -156,6 +156,7 @@ string calltest(string cls, string mth){
 		if (mth == "v_tg") return s9_adad::view::VC::t_v_tg();
 		if (mth == "v_tgs") return s9_adad::view::VC::t_v_tgs();
 		if (mth == "v_er") return s9_adad::view::VC::t_v_er();
+		if (mth == "v_itx") return s9_adad::view::VC::t_v_itx();
 	}
 	if (cls == "EvM"){
 		if (mth == "doEv_dta") return s9_adad::EvM::t_doEv_dta();
@@ -171,6 +172,11 @@ string calltest(string cls, string mth){
 		if (mth == "doEv_tgte") return s9_adad::EvM::t_doEv_tgte();
 		if (mth == "doEv_tgd") return s9_adad::EvM::t_doEv_tgd();
 		if (mth == "doEv_tgd_er") return s9_adad::EvM::t_doEv_tgd_er();
+		if (mth == "doEv_mdt") return s9_adad::EvM::t_doEv_mdt();
+		if (mth == "doEv_mtg") return s9_adad::EvM::t_doEv_mtg();
+		if (mth == "doEv_mtga") return s9_adad::EvM::t_doEv_mtga();
+		if (mth == "doEv_mp") return s9_adad::EvM::t_doEv_mp();
+		if (mth == "doEv_mp_x") return s9_adad::EvM::t_doEv_mp_x();
 	}
 	return "\033[31m[ERROR] not call\033[0m";
 }

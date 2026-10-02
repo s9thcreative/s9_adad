@@ -52,6 +52,7 @@ namespace s9_adad::view{
 			};
 			virtual ~VSp() = default;
 			virtual int cr() = 0;
+			virtual void i_cr(int pg) = 0;
 			virtual vector<s9_adad::core::TDtI>* dtl() = 0;
 			virtual vector<s9_adad::core::TgI>* tgl() = 0;
 			virtual DtItf* dtitf() = 0;
@@ -59,9 +60,11 @@ namespace s9_adad::view{
 	class VCI{
 		public:
 			virtual ~VCI() = default;
+			virtual VSp* o_sp() = 0;
 			virtual void dTgSel(s9_adad::core::TgI* tg) = 0;
 			virtual void u() = 0;
-			virtual void dEr(string) = 0;
+			virtual void dEr(string msg) = 0;
+			virtual string dITx(string msg) = 0;
 	};
 	class VC : public VCI{
 		public:
@@ -72,12 +75,15 @@ namespace s9_adad::view{
 			QMainWindow* w;
 			void ini(string ttl);
 			void st();
+			VSp* o_sp() override;
 			void dTgSel(s9_adad::core::TgI* tg) override;
 			void u() override;
-			void dEr(string) override;
+			void dEr(string msg) override;
+			string dITx(string msg) override;
 			static string t_v();
 			static string t_v_tg();
 			static string t_v_tgs();
 			static string t_v_er();
+			static string t_v_itx();
 	};
 }

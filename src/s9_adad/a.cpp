@@ -14,9 +14,49 @@ using namespace std;
 
 namespace s9_adad{
 
+class G{
+	public:
+		static G* inst(){
+			static G* o = new G();
+			return o;
+		}
+		ACA* ac = nullptr;
+		VCI* vc = nullptr;
+};
+
+class VSpM : public VSp,public DtItf{
+	public:
+		int pg = Pg_Dt;
+		VSpM(){
+		}
+		~VSpM() = default;
+		int cr() override{
+			return pg;
+		}
+		void i_cr(int pg_) override{
+			pg = pg_;
+		}
+		vector<s9_adad::core::TDtI>* dtl() override{
+			return G::inst()->ac->dtL();
+		}
+		vector<s9_adad::core::TgI>* tgl() override{
+			return G::inst()->ac->tgL();
+		}
+		s9_adad::core::TDtI* dt_cd(string cd) override{
+			return G::inst()->ac->dt(cd);
+		}
+		DtItf* dtitf() override{
+			return this;
+		}
+};
+
 class VCDmy : public VCI{
 	public:
 		~VCDmy() = default;
+		VSp* o_sp() override{
+			static VSpM* sp = new VSpM();
+			return sp;
+		}
 		void dTgSel(s9_adad::core::TgI* tg) override{
 			std::cout << "call dTgSel" << std::endl;
 		}
@@ -25,6 +65,10 @@ class VCDmy : public VCI{
 		}
 		void dEr(string msg) override{
 			std::cout << "call dEr:" << msg << std::endl;
+		}
+		string dITx(string msg) override{
+			std::cout << "call dITx:" << msg << std::endl;
+			return "dummy";
 		}
 };
 
@@ -130,19 +174,13 @@ class ACDmy : public ACA{
 		}
 		bool pOu() override{
 			std::cout << "php out" << endl;
+			if (md == "er"){
+				return false;
+			}
 			return true;
 		}
 };
 
-class G{
-	public:
-		static G* inst(){
-			static G* o = new G();
-			return o;
-		}
-		ACA* ac = nullptr;
-		VCI* vc = nullptr;
-};
 
 class EvM : public VEv{
 	public:
@@ -210,6 +248,37 @@ class EvM : public VEv{
 				}
 				G::inst()->ac->tgDe(*wk);
 				G::inst()->vc->u();
+			}
+			else if (ev->ev == EvTp::MnDt){
+				int pg = VSp::Pg_Dt;
+				if (G::inst()->vc->o_sp()->cr() != pg){
+					G::inst()->vc->o_sp()->i_cr(pg);
+					G::inst()->vc->u();
+				}
+			}
+			else if (ev->ev == EvTp::MnTg){
+				int pg = VSp::Pg_Tg;
+				if (G::inst()->vc->o_sp()->cr() != pg){
+					G::inst()->vc->o_sp()->i_cr(pg);
+					G::inst()->vc->u();
+				}
+			}
+			else if (ev->ev == EvTp::MnTgAdd){
+				string wk = G::inst()->vc->dITx("枠コード");
+				if (wk.empty()) return;
+				string m = G::inst()->ac->ckTg(wk);
+				if (m.empty()){
+					bool r = G::inst()->ac->tgAd(wk);
+					if (r){
+						G::inst()->vc->u();
+					}
+				}
+			}
+			else if (ev->ev == EvTp::MnPhp){
+				bool r = G::inst()->ac->pOu();
+				if (!r){
+					G::inst()->vc->dEr("PHP作成時にエラーが発生しました");
+				}
 			}
 		}
 		static string t_doEv_dta(){
@@ -373,6 +442,51 @@ class EvM : public VEv{
 			VG::inst()->ev = new VEvDmy();
 			string wk = "waku_no";
 			VEvO evo(EvTp::TgDel, &wk);
+			ev.doEv(&evo);
+			return "do";
+		}
+		static string t_doEv_mdt(){
+			EvM ev;
+			G::inst()->ac = new ACDmy();
+			G::inst()->vc = new VCDmy();
+			VG::inst()->ev = new VEvDmy();
+			VEvO evo(EvTp::MnDt, nullptr);
+			ev.doEv(&evo);
+			return "do"+to_string(G::inst()->vc->o_sp()->cr());
+		}
+		static string t_doEv_mtg(){
+			EvM ev;
+			G::inst()->ac = new ACDmy();
+			G::inst()->vc = new VCDmy();
+			VG::inst()->ev = new VEvDmy();
+			VEvO evo(EvTp::MnTg, nullptr);
+			ev.doEv(&evo);
+			return "do"+to_string(G::inst()->vc->o_sp()->cr());
+		}
+		static string t_doEv_mtga(){
+			EvM ev;
+			G::inst()->ac = new ACDmy();
+			G::inst()->vc = new VCDmy();
+			VG::inst()->ev = new VEvDmy();
+			VEvO evo(EvTp::MnTgAdd, nullptr);
+			ev.doEv(&evo);
+			return "do";
+		}
+		static string t_doEv_mp(){
+			EvM ev;
+			G::inst()->ac = new ACDmy();
+			G::inst()->vc = new VCDmy();
+			VG::inst()->ev = new VEvDmy();
+			VEvO evo(EvTp::MnPhp, nullptr);
+			ev.doEv(&evo);
+			return "do";
+		}
+		static string t_doEv_mp_x(){
+			EvM ev;
+			G::inst()->ac = new ACDmy("er");
+			G::inst()->vc = new VCDmy();
+			VG::inst()->ev = new VEvDmy();
+			VEvO evo(EvTp::MnPhp, nullptr);
 			ev.doEv(&evo);
 			return "do";
 		}
