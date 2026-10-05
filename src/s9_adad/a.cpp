@@ -4,7 +4,7 @@
 #include "core/ac.cpp"
 #include <vector>
 #include <string>
-
+#include "vr.hpp"
 
 
 
@@ -23,55 +23,6 @@ class G{
 		ACA* ac = nullptr;
 		VCI* vc = nullptr;
 };
-
-class VSpM : public VSp,public DtItf{
-	public:
-		int pg = Pg_Dt;
-		VSpM(){
-		}
-		~VSpM() = default;
-		int cr() override{
-			return pg;
-		}
-		void i_cr(int pg_) override{
-			pg = pg_;
-		}
-		vector<s9_adad::core::TDtI>* dtl() override{
-			return G::inst()->ac->dtL();
-		}
-		vector<s9_adad::core::TgI>* tgl() override{
-			return G::inst()->ac->tgL();
-		}
-		s9_adad::core::TDtI* dt_cd(string cd) override{
-			return G::inst()->ac->dt(cd);
-		}
-		DtItf* dtitf() override{
-			return this;
-		}
-};
-
-class VCDmy : public VCI{
-	public:
-		~VCDmy() = default;
-		VSp* o_sp() override{
-			static VSpM* sp = new VSpM();
-			return sp;
-		}
-		void dTgSel(s9_adad::core::TgI* tg) override{
-			std::cout << "call dTgSel" << std::endl;
-		}
-		void u() override{
-			std::cout << "call u" << std::endl;
-		}
-		void dEr(string msg) override{
-			std::cout << "call dEr:" << msg << std::endl;
-		}
-		string dITx(string msg) override{
-			std::cout << "call dITx:" << msg << std::endl;
-			return "dummy";
-		}
-};
-
 class ACDmy : public ACA{
 	public:
 		vector<TDtI> dtlo;
@@ -182,6 +133,102 @@ class ACDmy : public ACA{
 };
 
 
+class VSpM : public VSp,public DtItf{
+	public:
+		int pg = Pg_Dt;
+		VSpM(){
+		}
+		~VSpM() = default;
+		int cr() override{
+			return pg;
+		}
+		static string t_cr(){
+			VSpM sp;
+			sp.pg = VSp::Pg_Tg;
+			return to_string(sp.cr());
+		}
+		void i_cr(int pg_) override{
+			pg = pg_;
+		}
+		static string t_i_cr(){
+			VSpM sp;
+			sp.i_cr(VSp::Pg_Tg);
+			return to_string(sp.pg);
+		}
+		vector<s9_adad::core::TDtI>* dtl() override{
+			return G::inst()->ac->dtL();
+		}
+		static string t_dtl(){
+			G::inst()->ac = new ACDmy();
+			VSpM sp;
+			vector<TDtI>* r = sp.dtl();
+			stringstream ss;
+			for(TDtI& d:*r){
+				ss << d << "\n";
+			}
+			return ss.str();
+		}
+		vector<s9_adad::core::TgI>* tgl() override{
+			return G::inst()->ac->tgL();
+		}
+		static string t_tgl(){
+			G::inst()->ac = new ACDmy();
+			VSpM sp;
+			vector<TgI>* r = sp.tgl();
+			stringstream ss;
+			for(TgI& d:*r){
+				ss << d.wk << "\n";
+				for(string v:d.cds){
+					ss << "[" << v << "]";
+				}
+				ss << "\n";
+			}
+			return ss.str();
+		}
+		s9_adad::core::TDtI* dt_cd(string cd) override{
+			return G::inst()->ac->dt(cd);
+		}
+		static string t_dt_cd(){
+			G::inst()->ac = new ACDmy();
+			VSpM sp;
+			TDtI* r = sp.dt_cd("code1");
+			stringstream ss;
+			ss << *r << "\n";
+			return ss.str();
+		}
+		DtItf* dtitf() override{
+			return this;
+		}
+		static string t_dtitf(){
+			VSpM sp;
+			DtItf* r = sp.dtitf();
+			return to_string(r == &sp);
+		}
+};
+
+class VCDmy : public VCI{
+	public:
+		~VCDmy() = default;
+		VSp* o_sp() override{
+			static VSpM* sp = new VSpM();
+			return sp;
+		}
+		void dTgSel(s9_adad::core::TgI* tg) override{
+			std::cout << "call dTgSel" << std::endl;
+		}
+		void u() override{
+			std::cout << "call u" << std::endl;
+		}
+		void dEr(string msg) override{
+			std::cout << "call dEr:" << msg << std::endl;
+		}
+		string dITx(string msg) override{
+			std::cout << "call dITx:" << msg << std::endl;
+			return "dummy";
+		}
+};
+
+
 class EvM : public VEv{
 	public:
 		void doEv(VEvO* ev){
@@ -267,11 +314,13 @@ class EvM : public VEv{
 				string wk = G::inst()->vc->dITx("枠コード");
 				if (wk.empty()) return;
 				string m = G::inst()->ac->ckTg(wk);
-				if (m.empty()){
-					bool r = G::inst()->ac->tgAd(wk);
-					if (r){
-						G::inst()->vc->u();
-					}
+				if (!m.empty()){
+					G::inst()->vc->dEr(m);
+					return;
+				}
+				bool r = G::inst()->ac->tgAd(wk);
+				if (r){
+					G::inst()->vc->u();
 				}
 			}
 			else if (ev->ev == EvTp::MnPhp){
@@ -491,5 +540,27 @@ class EvM : public VEv{
 			return "do";
 		}
 };
+
+class A{
+	public:
+		void ex(){
+			AC ac;
+			G::inst()->ac = &ac;
+			VC vc;
+			G::inst()->vc = &vc;
+			ac.ldd();
+			vc.ini(string(Vr::AN) + " " + Vr::V);
+			VG::inst()->ev = new EvM();
+			vc.sp = new VSpM();
+			vc.st();
+		}
+		static string t_ex(){
+			AC::evdef = "../test/a/ex.txt";
+			A a;
+			a.ex();
+			return "exec";
+		}
+};
+
 
 }

@@ -37,7 +37,7 @@ QSize VTgDt::ly(QSize sz){
 }
 void VTgDt::u(){
 	vcd->setText(QString::fromStdString(dt->g("cd")));
-	string imu = dt->g("img");
+	string imu = dt->g("img+");
 	if (cu != imu){
 		vbn->clear();
 		delete(ci);
@@ -55,7 +55,7 @@ string VTgDt::t_v(){
 	VTgDt v(p);
 	TDtI dt;
 	dt.s("cd", "code1");
-	dt.s("img", "https://yupj.jp/game/s9ad/1.0/img/hanabira/title.png");
+	dt.s("img+", "https://yupj.jp/game/s9ad/1.0/img/hanabira/title.png");
 	v.i_dt(&dt);
 	v.u();
 	QSize sz = v.ly(QSize(600, 0xffff));

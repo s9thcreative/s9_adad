@@ -1,0 +1,4 @@
+path.data=ex_data.txt
+path.target=ex_target.txt
+path.out.ad_config=out/ad_config.php
+url.base.bnr=https://yupj.jp/game/s9ad/1.0/img

@@ -90,6 +90,7 @@ string calltest(string cls, string mth){
 	if (cls == "AC"){
 		if (mth == "ldev") return s9_adad::core::AC::t_ldev();
 		if (mth == "btg") return s9_adad::core::AC::t_btg();
+		if (mth == "dtin") return s9_adad::core::AC::t_dtin();
 		if (mth == "ldd") return s9_adad::core::AC::t_ldd();
 		if (mth == "dtL") return s9_adad::core::AC::t_dtL();
 		if (mth == "dt") return s9_adad::core::AC::t_dt();
@@ -177,6 +178,17 @@ string calltest(string cls, string mth){
 		if (mth == "doEv_mtga") return s9_adad::EvM::t_doEv_mtga();
 		if (mth == "doEv_mp") return s9_adad::EvM::t_doEv_mp();
 		if (mth == "doEv_mp_x") return s9_adad::EvM::t_doEv_mp_x();
+	}
+	if (cls == "VSpM"){
+		if (mth == "cr") return s9_adad::VSpM::t_cr();
+		if (mth == "i_cr") return s9_adad::VSpM::t_i_cr();
+		if (mth == "dtl") return s9_adad::VSpM::t_dtl();
+		if (mth == "tgl") return s9_adad::VSpM::t_tgl();
+		if (mth == "dt_cd") return s9_adad::VSpM::t_dt_cd();
+		if (mth == "dtitf") return s9_adad::VSpM::t_dtitf();
+	}
+	if (cls == "A"){
+		if (mth == "ex") return s9_adad::A::t_ex();
 	}
 	return "\033[31m[ERROR] not call\033[0m";
 }

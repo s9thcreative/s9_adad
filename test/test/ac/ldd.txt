@@ -1,2 +1,3 @@
 path.data=ldd-data.txt
 path.target=ldd-target.txt
+url.base.bnr=https://ggmoyou.com/img/

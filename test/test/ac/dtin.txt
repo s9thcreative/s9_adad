@@ -1,0 +1,1 @@
+url.base.bnr=https://ggmoyou.com/img/

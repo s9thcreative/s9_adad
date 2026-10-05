@@ -169,6 +169,7 @@ void VC::u(){
 		vdt->u();
 		vdt->ly(wsz);
 		vdt->setGeometry(0, 0, wsz.width(), wsz.height());
+		m->att(VM::Cnd::Dt);
 	}
 	else if (sp->cr() == VSp::Pg_Tg){
 		QSize wsz = w->centralWidget()->size();
@@ -177,7 +178,7 @@ void VC::u(){
 		vtg->u();
 		vtg->ly(wsz);
 		vtg->setGeometry(0, 0, wsz.width(), wsz.height());
-		vtg->show();
+		m->att(VM::Cnd::Tg);
 	}
 }
 string VC::t_v(){

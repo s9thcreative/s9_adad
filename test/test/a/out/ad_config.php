@@ -1,0 +1,26 @@
+<?php
+Config::set(
+	'ad_info', array(
+		'ad_target'=>array(
+			'waku1'=>array('code2'),
+		),
+		'ad_data'=>array(
+			'code1'=>array(
+				'target'=>'app',
+				'bg'=>'/hanabira/bg.png',
+				'titleimg'=>'/koinobo/title.png',
+				'comment'=>'コメント',
+				'attention'=>'無料',
+				'link'=>'https://ggmoyou.com',
+			),
+			'code2'=>array(
+				'target'=>'web',
+				'bg'=>'/applepie/bg.png',
+				'titleimg'=>'/applepie/title.png',
+				'comment'=>'コメント２',
+				'attention'=>'データ',
+				'link'=>'https://ggmoyou.com/applepie',
+			),
+		)
+	)
+);

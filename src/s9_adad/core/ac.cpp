@@ -187,8 +187,25 @@ class AC : public ACA{
 			ttg.hdrsz = 1;
 			ttg.ik = "wk"s;
 		}
+		void dtin(TDtI* dt){
+			const string& b = ev.g("url.base.bnr");
+			dt->s("bg+", b+dt->g("bg"));
+			dt->s("img+", b+dt->g("img"));
+		}
+		static string t_dtin(){
+			AC::evdef = "../test/ac/dtin.txt"s;
+			AC ac;
+			TDtI dt;
+			dt.s("bg", "/bg/test.png");
+			dt.s("img", "/img/test.png");
+			ac.dtin(&dt);
+			return string("bg+=")+dt.g("bg+")+";img+="+dt.g("img+");
+		}
 		void ldd(){
 			tdt.ld();
+			for(TDtI& d:tdt.dt){
+				dtin(&d);
+			}
 			ttg.ld();
 			btg(ttg.dt, tgl);
 		}
@@ -249,6 +266,7 @@ class AC : public ACA{
 			return ss.str();
 		}
 		bool dtIi(const string& k) override{
+			cout << "nullopt:" << (tdt.idx != nullopt) << endl;
 			if (tdt.idx != nullopt){
 				return tdt.idx->ii(k);
 			}
@@ -277,6 +295,7 @@ class AC : public ACA{
 			}
 			else{
 				bool ii = dtIi(v);
+				cout << v << "[" << ii << "]" << endl;
 				if (aa){
 					if (ii){
 						er += "cd already exists";
@@ -410,6 +429,7 @@ class AC : public ACA{
 		}
 
 		bool dtAd(TDtI& d) override{
+			dtin(&d);
 			bool r = tdt.ad(d);
 			if (!r) return false;
 			tdt.sv();
@@ -432,7 +452,9 @@ class AC : public ACA{
 			dti.s("att", "ATT");
 			dti.s("ln", "https://xxxxx.xxxxx/xxxxxx/");
 			bool r = ac.dtAd(dti);
-			return to_string(r);
+			stringstream ss;
+			ss << dti;
+			return to_string(r)+"\n"+ss.str();
 		}
 		static string t_dtAd_n(){
 			string p = "../test/ac/dtad_n.txt";
@@ -451,11 +473,14 @@ class AC : public ACA{
 			dti.s("att", "ATT");
 			dti.s("ln", "https://xxxxx.xxxxx/xxxxxx/");
 			bool r = ac.dtAd(dti);
-			return to_string(r);
+			stringstream ss;
+			ss << dti;
+			return to_string(r)+"\n"+ss.str();
 		}
 		bool dtEd(TDtI& d) override{
 			TDtI* vd = tdt.g(d.g(tdt.ik));
 			if (vd == nullptr) return false;
+			dtin(&d);
 			for(auto p : d.dt){
 				vd->s(p.first, p.second);
 			}
@@ -479,7 +504,9 @@ class AC : public ACA{
 			dti.s("att", "ATT-ed");
 			dti.s("ln", "https://yyyyy.yyyyy/yyyyy/");
 			bool r = ac.dtEd(dti);
-			return to_string(r);
+			stringstream ss;
+			ss << dti;
+			return to_string(r)+"\n"+ss.str();
 		}
 		static string t_dtEd_n(){
 			string p = "../test/ac/dted_n.txt";
@@ -498,7 +525,9 @@ class AC : public ACA{
 			dti.s("att", "ATT-ed");
 			dti.s("ln", "https://yyyyy.yyyyy/yyyyy/");
 			bool r = ac.dtEd(dti);
-			return to_string(r);
+			stringstream ss;
+			ss << dti;
+			return to_string(r)+"\n"+ss.str();
 		}
 		bool dtDe(const string& k) override{
 			bool r = tdt.de(k);

@@ -330,6 +330,7 @@ class TBAc{
 				return St::Err;
 			}
 			dt = any_cast<vector<TDtI>>(obs.data["lst"]);
+			bi();
 			return St::Ok;
 		}
 		static string t_ld(){

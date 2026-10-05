@@ -1,0 +1,3 @@
+cd	tg	bg	img	cm	att	ln
+code1	app	/hanabira/bg.png	/koinobo/title.png	コメント	無料	https://ggmoyou.com
+code2	web	/applepie/bg.png	/applepie/title.png	コメント２	データ	https://ggmoyou.com/applepie

@@ -36,7 +36,7 @@ QSize VDtLI::ly(QSize sz){
 }
 void VDtLI::u(){
 	vcd->setText(QString::fromStdString(dt->g("cd")));
-	string imu = dt->g("img");
+	string imu = dt->g("img+");
 	if (cu != imu){
 		vbn->clear();
 		delete(ci);
@@ -54,7 +54,7 @@ string VDtLI::t_v(){
 	VDtLI v(p);
 	TDtI dt;
 	dt.s("cd", "code1");
-	dt.s("img", "https://yupj.jp/game/s9ad/1.0/img/hanabira/title.png");
+	dt.s("img+", "https://yupj.jp/game/s9ad/1.0/img/hanabira/title.png");
 	v.i_dt(&dt);
 	v.u();
 	QSize sz = v.ly(QSize(600, 0xffff));
@@ -120,7 +120,7 @@ string VDtL::t_v(){
 	for(int i = 0; i < 5; i++){
 		TDtI dt;
 		dt.s("cd", "code"+to_string(i));
-		dt.s("img", "https://yupj.jp/game/s9ad/1.0/img/hanabira/title.png");
+		dt.s("img+", "https://yupj.jp/game/s9ad/1.0/img/hanabira/title.png");
 		dtl.push_back(dt);
 	}
 	v.i_dtl(&dtl);
@@ -303,6 +303,8 @@ string VDt::t_v(){
 		dt.s("tg", "app");
 		dt.s("bg", "/bg/test.png");
 		dt.s("img", "/img/test.png");
+		dt.s("bg+", "/bg/test.png");
+		dt.s("img+", "/img/test.png");
 		dt.s("cm", "comment"+to_string(i));
 		dt.s("att", "ATT");
 		dt.s("ln", "https://ggmoyou.com/"+to_string(i));
