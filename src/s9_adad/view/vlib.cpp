@@ -29,7 +29,7 @@ VImLd* VImLd::cur(){
 	return _cur;
 }
 void VImLd::ld(string url, std::function<void(QPixmap*)> cb){
-	std::cout << url << " call" << endl;
+//	std::cout << url << " call" << endl;
 	QUrl u(QString::fromStdString(url));
 	QNetworkRequest req(u);
 	QNetworkReply* r = VG::inst()->net->get(req);

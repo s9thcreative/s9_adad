@@ -1,3 +1,5 @@
+#pragma once
+
 #include "view/vc.hpp"
 #include <iostream>
 #include "view/vlib.hpp"
